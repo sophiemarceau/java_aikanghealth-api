@@ -11,7 +11,6 @@ import cn.hutool.json.JSONUtil;
 import com.example.his.api.db.dao.GoodsDao;
 import com.example.his.api.db.dao.GoodsSnapshotDao;
 import com.example.his.api.db.dao.OrderDao;
-import com.example.his.api.db.pojo.GoodsEntity;
 import com.example.his.api.db.pojo.GoodsSnapshotEntity;
 import com.example.his.api.db.pojo.OrderEntity;
 import com.example.his.api.exception.HisException;
@@ -74,6 +73,7 @@ public class OrderServiceImpl implements OrderService {
         String goodsMd5 = MapUtil.getStr(map, "md5");
         String temp = MapUtil.getStr(map, "checkup_1");
         List<Map> goodsCheckup_1 = temp != null ? JSONUtil.parseArray(temp).toList(Map.class) : null;
+
         temp = MapUtil.getStr(map, "checkup_2");
         List<Map> goodsCheckup_2 = temp != null ? JSONUtil.parseArray(temp).toList(Map.class) : null;
 
@@ -87,7 +87,8 @@ public class OrderServiceImpl implements OrderService {
         List<Map> goodsCheckup = temp != null ? JSONUtil.parseArray(temp).toList(Map.class) : null;
 
         temp = MapUtil.getStr(map, "tag");
-        List<Map> goodsTag = temp != null ? JSONUtil.parseArray(temp).toList(Map.class) : null;
+        List<String> goodsTag = temp != null ? JSONUtil.parseArray(temp).toList(String.class) : null;
+
         ExpressRunner runner = new ExpressRunner();
         DefaultContext<String, Object> context = new DefaultContext<String, Object>();
         context.put("number", number.intValue());
@@ -141,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
                 entity.setInitialPrice(goodsInitialPrice);
                 entity.setCurrentPrice(goodsCurrentPrice);
                 entity.setType(goodsType);
+                entity.setTag(goodsTag);
                 entity.setRule(goodsRuleName);
                 entity.setMd5(goodsMd5);
                 //保存商品快照，拿到快照主键值
@@ -160,12 +162,12 @@ public class OrderServiceImpl implements OrderService {
             entity.setOutTradeNo(outTradeNo);
             orderDao.insert(entity);//save 订单记录
 
-            QrConfig qrConfig = new QrConfig();
+            QrConfig qrConfig = new QrConfig();//付款二维码图片转换成base64字符串返回给前端
             qrConfig.setWidth(230);
             qrConfig.setHeight(230);
             qrConfig.setMargin(2);
             String qrCodeBase64 = QrCodeUtil.generateAsBase64(codeUrl, qrConfig, "jpg");
-
+            //更新商品销量
             int rows = goodsDao.updateSalesVolume(goodsId);
             if (rows != 1) {
                 throw new HisException("更新商品销量失败");
