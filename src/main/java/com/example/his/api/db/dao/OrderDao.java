@@ -36,6 +36,10 @@ public interface OrderDao {
     public int updateOutRefundNo(Map param);
 
     public int updateRefundsByOutRefundNo(String outRefundNo);
+
+    public ArrayList<HashMap> searchTimeoutRefund();
+
+    public int updateRefundStatusById(int id);
 }
 
 

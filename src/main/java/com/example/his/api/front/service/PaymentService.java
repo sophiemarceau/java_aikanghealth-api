@@ -10,4 +10,6 @@ public interface PaymentService {
     public String searchPaymentResult(String outTradeNo);
 
     public String refund(String transactionId, Integer refund, Integer total, String notifyUrl);
+
+    public String searchRefundResult(String outRefundNo);
 }

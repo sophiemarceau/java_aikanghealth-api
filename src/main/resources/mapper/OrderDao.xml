@@ -131,4 +131,22 @@
         WHERE out_refund_no = #{outRefundNo}
           AND status = 3
     </update>
+
+    <!--查询已经申请退款的订单， 并申请时间距今已经超过30分钟-->
+    <select id="searchTimeoutRefund" resultType="HashMap">
+        SELECT id,
+               out_refund_no AS outRefundNo
+        FROM tb_order
+        WHERE status = 3
+          AND refund_date IS NOT NULL
+          AND TIMESTAMPDIFF(MINUTE, refund_time, NOW()) > 30
+    </select>
+
+    <!--更新订单状态 -->
+    <update id="updateRefundStatusById" parameterType="int">
+        UPDATE tb_order
+        SET status = 4
+        WHERE id = #{id}
+          AND status = 3
+    </update>
 </mapper>

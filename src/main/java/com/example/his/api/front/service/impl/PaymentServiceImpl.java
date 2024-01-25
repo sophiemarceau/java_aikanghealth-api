@@ -92,4 +92,20 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return null;
     }
+
+    public String searchRefundResult(String outRefundNo) {
+        WechatResponseEntity<ObjectNode> entity = wechatApiProvider.directPayApi("his-vue").queryRefundInfo(outRefundNo);
+        if (!entity.is2xxSuccessful()) {
+            log.error("查询退款失败", entity.getBody());
+            return "FAIL";
+        }
+        ObjectNode body = entity.getBody();
+        String status = body.get("status").textValue();
+        if ("SUCCESS".equals(status)) {
+            return "SUCCESS";
+        } else if ("ABNORMAL".equals(status)) {
+            return "ABNORMAL";
+        }
+        return "FAIL";
+    }
 }
