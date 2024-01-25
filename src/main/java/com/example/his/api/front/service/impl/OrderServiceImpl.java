@@ -8,6 +8,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import cn.hutool.json.JSONUtil;
+import com.example.his.api.common.PageUtils;
 import com.example.his.api.db.dao.GoodsDao;
 import com.example.his.api.db.dao.GoodsSnapshotDao;
 import com.example.his.api.db.dao.OrderDao;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     private GoodsSnapshotDao goodsSnapshotDao;
 
     private String paymentNotifyUrl = "/front/order/paymentCallback";
+    private String refundNotifyUrl = "/front/order/refundCallback";
 
 
     @Override
@@ -185,6 +188,85 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean updatePayment(Map param) {
         int rows = orderDao.updatePayment(param);
+        return rows == 1;
+    }
+
+    @Override
+    public Integer searchCustomerId(String outTradeNo) {
+        Integer customerId = orderDao.searchCustomerId(outTradeNo);
+        return customerId;
+    }
+
+    @Override
+    @Transactional
+    public boolean searchPaymentResult(String outTradeNo) {
+        String transactionId = paymentService.searchPaymentResult(outTradeNo);
+        if (transactionId != null) {
+            this.updatePayment(new HashMap() {
+                {
+                    put("outTradeNo", outTradeNo);
+                    put("transactionId", transactionId);
+                }
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public PageUtils searchByPage(Map param) {
+        ArrayList<HashMap> list = new ArrayList<>();
+        long count = orderDao.searchFrontOrderCount(param);
+        if (count > 0) {
+            list = orderDao.searchFrontOrderByPage(param);
+        }
+        int start = (Integer) param.get("start");
+        int length = (Integer) param.get("length");
+        PageUtils pageUtils = new PageUtils(list, count, start, length);
+        return pageUtils;
+    }
+
+    @Override
+    @Transactional
+    public boolean refund(Map param) {
+        // 1. 查询订单是否存在退款流水号，避免用户重复申请退款
+        int id = MapUtil.getInt(param, "id");
+        String outRefundNo = orderDao.searchAlreadyRefund(id);
+        if (outRefundNo != null) {//判断订单是否申请了退款
+            return false;
+        }
+        String customerId = MapUtil.getStr(param, "customerId");
+        log.error("customerId====" + customerId);//customerId
+        HashMap map = orderDao.searchRefundNeeded(param);
+        String transactionId = MapUtil.getStr(map, "transactionId");
+        String amount = MapUtil.getStr(map, "amount");
+        //最小单位转化为分
+//        int total = NumberUtil.mul(amount, "100").intValue();//总金额
+        int total = 1;
+//        int refund = total;//退款金额
+        int refund = 1; //测试临时设置1 分钱
+        if (transactionId == null) {
+            log.error("transactionId不能为空");
+            return false;
+        }
+        //执行退款
+        outRefundNo = paymentService.refund(transactionId, refund, total, refundNotifyUrl);
+        param.put("outRefundNo", outRefundNo);
+        if (outRefundNo != null) {
+            //更新退款流水号和退款日期时间
+            int rows = orderDao.updateOutRefundNo(param);
+            if (rows == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateRefundStatus(String outRefundNo) {
+        int rows = orderDao.updateRefundsByOutRefundNo(outRefundNo);
         return rows == 1;
     }
 }

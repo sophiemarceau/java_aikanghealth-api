@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@Document(collation = "goods_snapshot")
+@Document(collection = "goods_snapshot")
 public class GoodsSnapshotEntity implements Serializable {
     @Id
     private String _id;

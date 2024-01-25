@@ -3,9 +3,8 @@ package com.example.his.api.front.service.impl;
 import cn.felord.payment.PayException;
 import cn.felord.payment.wechat.v3.WechatApiProvider;
 import cn.felord.payment.wechat.v3.WechatResponseEntity;
-import cn.felord.payment.wechat.v3.model.Amount;
-import cn.felord.payment.wechat.v3.model.PayParams;
-import cn.felord.payment.wechat.v3.model.SceneInfo;
+import cn.felord.payment.wechat.v3.model.*;
+import cn.hutool.core.util.IdUtil;
 import com.example.his.api.front.service.PaymentService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
@@ -48,5 +47,49 @@ public class PaymentServiceImpl implements PaymentService {
             log.error("创建微信支付订单失败", response.getBody());
             throw new PayException("创建微信支付订单失败");
         }
+    }
+
+    @Override
+    public String searchPaymentResult(String outTradeNo) {
+        TransactionQueryParams params = new TransactionQueryParams();
+        params.setTransactionIdOrOutTradeNo(outTradeNo);
+        WechatResponseEntity<ObjectNode> entity = wechatApiProvider.directPayApi("his-vue").queryTransactionByOutTradeNo(params);
+        if (!entity.is2xxSuccessful()) {
+            log.error("查询付款失败", entity.getBody());
+            return null;
+        }
+        ObjectNode body = entity.getBody();
+        String status = body.get("trade_state").textValue();
+        if ("SUCCESS".equals(status)) {
+            String transactionId = body.get("transaction_id").textValue();
+            return transactionId;
+        }
+        return null;
+    }
+
+    @Override
+    public String refund(String transactionId, Integer refund, Integer total, String notifyUrl) {
+        RefundParams params = new RefundParams();
+        params.setTransactionId(transactionId);
+        String outRefundNo = IdUtil.simpleUUID().toUpperCase();//退款流水号
+        params.setOutRefundNo(outRefundNo);
+        params.setNotifyUrl(notifyUrl);
+
+        RefundParams.RefundAmount amount = new RefundParams.RefundAmount();
+        amount.setRefund(refund);
+        amount.setTotal(total);//订单金额
+        amount.setCurrency("CNY");
+        params.setAmount(amount);
+
+        WechatResponseEntity<ObjectNode> entity = wechatApiProvider.directPayApi("his-vue").refund(params);
+        if (!entity.is2xxSuccessful()) {
+            log.error("退款失败", entity.getBody());
+            return null;
+        }
+        ObjectNode body = entity.getBody();
+        if ("PROCESSING".equals(body.get("status").textValue())) {
+            return outRefundNo;
+        }
+        return null;
     }
 }

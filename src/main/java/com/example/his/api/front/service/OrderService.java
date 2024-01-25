@@ -1,5 +1,7 @@
 package com.example.his.api.front.service;
 
+import com.example.his.api.common.PageUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,4 +9,14 @@ public interface OrderService {
     public HashMap createPayment(Map param);
 
     public boolean updatePayment(Map param);
+
+    public Integer searchCustomerId(String outTradeNo);
+
+    public boolean searchPaymentResult(String outTradeNo);
+
+    public PageUtils searchByPage(Map param);
+
+    public boolean refund(Map param);
+
+    public boolean updateRefundStatus(String outRefundNo);
 }

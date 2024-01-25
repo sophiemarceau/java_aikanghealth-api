@@ -2,6 +2,7 @@ package com.example.his.api.db.dao;
 
 import com.example.his.api.db.pojo.OrderEntity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,20 @@ public interface OrderDao {
     public int insert(OrderEntity entity);
 
     public int updatePayment(Map param);
+
+    public Integer searchCustomerId(String outTradeNo);
+
+    public ArrayList<HashMap> searchFrontOrderByPage(Map param);
+
+    public long searchFrontOrderCount(Map param);
+
+    public String searchAlreadyRefund(int id);
+
+    public HashMap searchRefundNeeded(Map param);
+
+    public int updateOutRefundNo(Map param);
+
+    public int updateRefundsByOutRefundNo(String outRefundNo);
 }
 
 
