@@ -149,4 +149,12 @@
         WHERE id = #{id}
           AND status = 3
     </update>
+
+    <update id="closeOrderById" parameterType="Map">
+        UPDATE tb_order
+        SET status = 2
+        WHERE id = #{id}
+          AND customer_id = #{customerId}
+          AND status = 1
+    </update>
 </mapper>

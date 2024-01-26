@@ -19,4 +19,8 @@ public interface OrderService {
     public boolean refund(Map param);
 
     public boolean updateRefundStatus(String outRefundNo);
+
+    public String payOrder(int customerId, String outTradeNo);
+
+    public boolean closeOrderById(Map param);
 }

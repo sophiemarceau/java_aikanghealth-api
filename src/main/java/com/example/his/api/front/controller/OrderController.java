@@ -8,10 +8,7 @@ import cn.hutool.json.JSONObject;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
 import com.example.his.api.config.sa_token.StpCustomerUtil;
-import com.example.his.api.front.controller.form.CreatePaymentForm;
-import com.example.his.api.front.controller.form.RefundForm;
-import com.example.his.api.front.controller.form.SearchOrderByPageForm;
-import com.example.his.api.front.controller.form.SearchPaymentResultForm;
+import com.example.his.api.front.controller.form.*;
 import com.example.his.api.front.service.OrderService;
 import com.example.his.api.socket.WebSocketService;
 import lombok.SneakyThrows;
@@ -157,5 +154,23 @@ public class OrderController {
                 //退款的银行开 不能用， 发送短信给用户手机，让用户联系客服执行手动退款到其他银行卡
             }
         });
+    }
+
+    @PostMapping("/payOrder")
+    @SaCheckLogin(type = StpCustomerUtil.TYPE)
+    public R payOrder(@RequestBody @Valid PayOrderForm form) {
+        int customerId = StpCustomerUtil.getLoginIdAsInt();
+        String qrCodeBase64 = orderService.payOrder(customerId, form.getOutTradeNo());
+        return R.ok().put("result", qrCodeBase64 != null).put("qrCodeBase64", qrCodeBase64);
+    }
+
+    @PostMapping("/closeOrderById")
+    @SaCheckLogin(type = StpCustomerUtil.TYPE)
+    public R closeOrderById(@RequestBody @Valid CloseOrderByIdForm form) {
+        int customerId = StpCustomerUtil.getLoginIdAsInt();
+        form.setCustomerId(customerId);
+        Map param = BeanUtil.beanToMap(form);
+        boolean bool = orderService.closeOrderById(param);
+        return R.ok().put("result", bool);
     }
 }

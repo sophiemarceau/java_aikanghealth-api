@@ -269,4 +269,25 @@ public class OrderServiceImpl implements OrderService {
         int rows = orderDao.updateRefundsByOutRefundNo(outRefundNo);
         return rows == 1;
     }
+
+    @Override
+    public String payOrder(int customerId, String outTradeNo) {
+        String key = "codeUrl_" + customerId + "_" + outTradeNo;
+        if (redisTemplate.hasKey(key)) {
+            //redis 中取出缓存的付款URL
+            String codeUrl = redisTemplate.opsForValue().get(key).toString();
+            QrConfig qrConfig = new QrConfig();
+            qrConfig.setWidth(230);
+            qrConfig.setHeight(230);
+            qrConfig.setMargin(2);
+            String qrCodeBase64 = QrCodeUtil.generateAsBase64(codeUrl, qrConfig, "jpg");
+            return qrCodeBase64;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean closeOrderById(Map param) {
+        return orderDao.closeOrderById(param) == 1;
+    }
 }

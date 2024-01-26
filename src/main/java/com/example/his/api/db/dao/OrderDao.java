@@ -40,6 +40,8 @@ public interface OrderDao {
     public ArrayList<HashMap> searchTimeoutRefund();
 
     public int updateRefundStatusById(int id);
+
+    public int closeOrderById(Map param);
 }
 
 
