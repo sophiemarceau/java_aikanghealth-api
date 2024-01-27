@@ -7,5 +7,28 @@
         SELECT id, name
         FROM tb_rule
     </select>
+    <select id="searchByPage" parameterType="Map" resultType="HashMap">
+        SELECT r.id,
+               r.name,
+               IFNULL(tmp.count, 0) AS count,
+               r.remark
+        FROM tb_rule r
+        LEFT JOIN ( SELECT rule_id, COUNT(*) AS count FROM tb_goods GROUP BY rule_id)
+        <where>
+            <if test="name!=null">
+                AND r.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        LIMIT #{start}, #{length}
+    </select>
 
+    <select id="searchCount" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_rule
+        <where>
+            <if test="name!=null">
+                AND r.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+    </select>
 </mapper>

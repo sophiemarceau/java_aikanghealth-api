@@ -42,6 +42,12 @@ public interface OrderDao {
     public int updateRefundStatusById(int id);
 
     public int closeOrderById(Map param);
+
+    public ArrayList<HashMap> searchByPage(Map param);
+
+    public long searchCount(Map param);
+
+    public int deleteById(int id);
 }
 
 
