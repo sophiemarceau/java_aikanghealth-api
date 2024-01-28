@@ -9,6 +9,7 @@ import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
 import com.example.his.api.config.sa_token.StpCustomerUtil;
 import com.example.his.api.front.controller.form.*;
+import com.example.his.api.front.service.GoodsService;
 import com.example.his.api.front.service.OrderService;
 import com.example.his.api.socket.WebSocketService;
 import lombok.SneakyThrows;
@@ -30,6 +31,8 @@ public class OrderController {
     private OrderService orderService;
     @Resource
     private WechatApiProvider wechatApiProvider;
+    @Resource
+    private GoodsService goodsService;
 
     @PostMapping("/createPayment")
     @SaCheckLogin(type = StpCustomerUtil.TYPE)
@@ -172,5 +175,13 @@ public class OrderController {
         Map param = BeanUtil.beanToMap(form);
         boolean bool = orderService.closeOrderById(param);
         return R.ok().put("result", bool);
+    }
+
+    @PostMapping("/searchSnapshotForFront")
+    @SaCheckLogin(type = StpCustomerUtil.TYPE)
+    public R searchSnapshotForFront(@RequestBody @Valid SearchGoodsSnapshotByIdForm form) {
+        int customerId = StpCustomerUtil.getLoginIdAsInt();
+        HashMap map = goodsService.searchSnapshotById(form.getSnapshotId(), customerId);
+        return R.ok().put("result", map);
     }
 }

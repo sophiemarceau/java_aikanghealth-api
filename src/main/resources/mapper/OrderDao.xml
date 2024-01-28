@@ -233,4 +233,12 @@
         WHERE id = #{id}
           AND status = 2
     </delete>
+
+    <select id="hasOwnSnapshot" parameterType="Map" resultType="Integer">
+        SELECT id
+        FROM tb_order
+        WHERE customer_id = #{customerId}
+        AND snapshot_id = #{snapshotId}
+        LIMIT 1
+    </select>
 </mapper>

@@ -7,7 +7,9 @@ import cn.hutool.json.JSONUtil;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.db.dao.GoodsDao;
 import com.example.his.api.db.dao.GoodsSnapshotDao;
+import com.example.his.api.db.dao.OrderDao;
 import com.example.his.api.db.pojo.GoodsSnapshotEntity;
+import com.example.his.api.exception.HisException;
 import com.example.his.api.front.service.GoodsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,7 +27,8 @@ public class GoodsServiceImpl implements GoodsService {
     private GoodsDao goodsDao;
     @Resource
     private GoodsSnapshotDao goodsSnapshotDao;
-
+    @Resource
+    private OrderDao orderDao;
 
     @Override
     @Cacheable(cacheNames = "goods", key = "#id")
@@ -74,7 +77,16 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public HashMap searchSnapshotById(String snapshotId, Integer customerId) {
         // 如果customerId 不为空， 检查该客户是否拥有该订单快照
-
+        if (customerId != null) {
+            //判断用户是否购买过该商品
+            HashMap param = new HashMap(){{
+                put("customerId", customerId);
+                put("snapshotId", snapshotId);
+            }};
+            if (orderDao.hasOwnSnapshot(param) == null) {
+                throw new HisException(("您没有购买过该商品"));
+            }
+        }
         GoodsSnapshotEntity entity = goodsSnapshotDao.searchById(snapshotId);
         HashMap map = BeanUtil.toBean(entity, HashMap.class);
         return map;

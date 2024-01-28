@@ -48,6 +48,9 @@ public interface OrderDao {
     public long searchCount(Map param);
 
     public int deleteById(int id);
+
+    public Integer hasOwnSnapshot(Map param);
+
 }
 
 
