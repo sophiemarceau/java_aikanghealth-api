@@ -52,7 +52,7 @@ public class OrderController {
     @PostMapping("/checkPaymentResult")
     @SaCheckPermission(value = {"ROOT", "ORDER:UPDATE"}, mode = SaMode.OR)
     public R checkPaymentResult(@RequestBody @Valid CheckPaymentResultForm form) {
-        int rows = orderService.checkPaymentResult(form.getOutTradeArray());
+        int rows = orderService.checkPaymentResult(form.getOutTradeNoArray());
         return R.ok().put("rows", rows);
     }
 
@@ -64,7 +64,7 @@ public class OrderController {
     }
 
     @PostMapping("/updateRefundStatusById")
-    @SaCheckPermission(value = {"ROOT", "ORDER:DELETE"}, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "ORDER:UPDATE"}, mode = SaMode.OR)
     public R updateRefundStatusById(@RequestBody @Valid UpdateRefundStatusByIdForm form) {
         int rows = orderService.updateRefundStatusById(form.getId());
         return R.ok().put("rows", rows);

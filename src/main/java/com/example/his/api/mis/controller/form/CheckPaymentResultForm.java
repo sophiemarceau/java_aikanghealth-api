@@ -7,5 +7,5 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class CheckPaymentResultForm {
     @NotEmpty(message = "ourTradeArray不能为空")
-    private String[] outTradeArray;
+    private String[] outTradeNoArray;
 }

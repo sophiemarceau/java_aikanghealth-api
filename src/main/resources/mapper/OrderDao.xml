@@ -48,7 +48,7 @@
         SET transaction_id = #{transactionId},
             status         = 3
         WHERE out_trade_no = #{outTradeNo}
-          AND status = 1
+          AND status IN (1, 2)
     </update>
 
 
