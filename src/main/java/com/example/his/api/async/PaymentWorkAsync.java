@@ -16,7 +16,7 @@ public class PaymentWorkAsync {
     @Resource
     private OrderDao orderDao;
 
-    @Resource
+    @Resource//c26174a54af0bbdc632962821972e5509f949bee680383f515564ee732fa8c1c
     private PaymentService paymentService;
 
     @Async("AsyncTaskExecutor")//找到线程池，该方法执行会被线程池分配给空闲的线程
