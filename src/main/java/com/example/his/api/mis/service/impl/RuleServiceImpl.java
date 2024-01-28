@@ -3,8 +3,10 @@ package com.example.his.api.mis.service.impl;
 import cn.hutool.core.map.MapUtil;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.db.dao.RuleDao;
+import com.example.his.api.db.pojo.RuleEntity;
 import com.example.his.api.mis.service.RuleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -34,5 +36,29 @@ public class RuleServiceImpl implements RuleService {
         return pageUtils;
     }
 
+    @Override
+    @Transactional
+    public int insert(RuleEntity entity) {
+        int rows = ruleDao.insert(entity);
+        return rows;
+    }
 
+    @Override
+    public HashMap searchById(int id) {
+        HashMap map = ruleDao.searchById(id);
+        return map;
+    }
+
+    @Override
+    public int update(RuleEntity entity) {
+        int rows = ruleDao.update(entity);
+        return rows;
+    }
+
+    @Override
+    @Transactional
+    public int deleteById(int id) {
+        int rows = ruleDao.deleteById(id);
+        return rows;
+    }
 }
