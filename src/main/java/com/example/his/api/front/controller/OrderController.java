@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@RestController("FrontOderController")
+@RestController("FrontOrderController")
 @RequestMapping("/front/order")
 @Slf4j
 public class OrderController {
@@ -31,8 +31,7 @@ public class OrderController {
     private OrderService orderService;
     @Resource
     private WechatApiProvider wechatApiProvider;
-    @Resource
-    private GoodsService goodsService;
+
 
     @PostMapping("/createPayment")
     @SaCheckLogin(type = StpCustomerUtil.TYPE)
@@ -177,11 +176,4 @@ public class OrderController {
         return R.ok().put("result", bool);
     }
 
-    @PostMapping("/searchSnapshotForFront")
-    @SaCheckLogin(type = StpCustomerUtil.TYPE)
-    public R searchSnapshotForFront(@RequestBody @Valid SearchGoodsSnapshotByIdForm form) {
-        int customerId = StpCustomerUtil.getLoginIdAsInt();
-        HashMap map = goodsService.searchSnapshotById(form.getSnapshotId(), customerId);
-        return R.ok().put("result", map);
-    }
 }

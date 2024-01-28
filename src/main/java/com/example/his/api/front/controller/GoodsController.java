@@ -5,6 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
 
+import com.example.his.api.config.sa_token.StpCustomerUtil;
 import com.example.his.api.front.controller.form.SearchGoodsByIdForm;
 import com.example.his.api.front.controller.form.SearchGoodsListByPageForm;
 import com.example.his.api.front.controller.form.SearchGoodsSnapshotByIdForm;
@@ -53,6 +54,14 @@ public class GoodsController {
     @SaCheckLogin
     public R searchSnapshotForMis(@RequestBody @Valid SearchGoodsSnapshotByIdForm form) {
         HashMap map = goodsService.searchSnapshotById(form.getSnapshotId(), null);
+        return R.ok().put("result", map);
+    }
+
+    @PostMapping("/searchSnapshotForFront")
+    @SaCheckLogin(type = StpCustomerUtil.TYPE)
+    public R searchSnapshotForFront(@RequestBody @Valid SearchGoodsSnapshotByIdForm form) {
+        int customerId = StpCustomerUtil.getLoginIdAsInt();
+        HashMap map = goodsService.searchSnapshotById(form.getSnapshotId(), customerId);
         return R.ok().put("result", map);
     }
 }
