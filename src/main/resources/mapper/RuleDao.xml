@@ -13,7 +13,7 @@
                IFNULL(tmp.count, 0) AS count,
                r.remark
         FROM tb_rule r
-        LEFT JOIN ( SELECT rule_id, COUNT(*) AS count FROM tb_goods GROUP BY rule_id)
+        LEFT JOIN ( SELECT rule_id, COUNT(*) AS count FROM tb_goods GROUP BY rule_id ) tmp ON r.id = tmp.rule_id
         <where>
             <if test="name!=null">
                 AND r.name LIKE CONCAT('%', #{name}, '%')
@@ -27,7 +27,7 @@
         FROM tb_rule
         <where>
             <if test="name!=null">
-                AND r.name LIKE CONCAT('%', #{name}, '%')
+                AND name LIKE CONCAT('%', #{name}, '%')
             </if>
         </where>
     </select>
