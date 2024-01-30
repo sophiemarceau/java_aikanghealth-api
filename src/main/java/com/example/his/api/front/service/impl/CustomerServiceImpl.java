@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Service("FrontCustmerSericeImpl")
+@Service("FrontCustomerServiceImpl")
 @Slf4j
 public class CustomerServiceImpl implements CustomerService {
     @Resource
@@ -95,4 +95,5 @@ public class CustomerServiceImpl implements CustomerService {
         int rows = customerDao.update(param);
         return rows == 1;
     }
+
 }
