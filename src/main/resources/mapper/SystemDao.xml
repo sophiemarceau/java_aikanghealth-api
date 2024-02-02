@@ -4,5 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.his.api.db.dao.SystemDao">
 
-
+<select id="searchAll" resultType="com.example.his.api.db.pojo.SystemEntity">
+    SELECT id, item, `value`
+    FROM tb_system
+</select>
 </mapper>

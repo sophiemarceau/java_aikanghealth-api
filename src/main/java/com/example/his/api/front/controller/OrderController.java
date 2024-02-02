@@ -9,7 +9,6 @@ import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
 import com.example.his.api.config.sa_token.StpCustomerUtil;
 import com.example.his.api.front.controller.form.*;
-import com.example.his.api.front.service.GoodsService;
 import com.example.his.api.front.service.OrderService;
 import com.example.his.api.socket.WebSocketService;
 import lombok.SneakyThrows;
@@ -67,8 +66,6 @@ public class OrderController {
         return wechatApiProvider.callback("his-vue").transactionCallback(params, data -> {
             String transactionId = data.getTransactionId();
             String outTradeNo = data.getOutTradeNo();
-            log.error("transactionId=====" + transactionId);
-            log.error("outTradeNo=====" + outTradeNo);
             boolean bool = orderService.updatePayment(new HashMap() {{
                 put("outTradeNo", outTradeNo);
                 put("transactionId", transactionId);

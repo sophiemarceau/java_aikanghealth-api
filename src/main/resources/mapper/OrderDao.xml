@@ -244,7 +244,19 @@
         SELECT id
         FROM tb_order
         WHERE customer_id = #{customerId}
-        AND snapshot_id = #{snapshotId}
-        LIMIT 1
+          AND snapshot_id = #{snapshotId} LIMIT 1
+    </select>
+
+    <update id="updateStatus" parameterType="Map">
+        UPDATE tb_order
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <select id="hasOwnOrder" parameterType="Map" resultType="Integer">
+        SELECT id
+        FROM tb_order
+        WHERE id = #{id}
+          AND customer_id = #{customerId}
     </select>
 </mapper>

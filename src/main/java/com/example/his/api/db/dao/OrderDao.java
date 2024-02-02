@@ -51,6 +51,9 @@ public interface OrderDao {
 
     public Integer hasOwnSnapshot(Map param);
 
+    public int updateStatus(Map param);
+
+    public Integer hasOwnOrder(Map param);
 }
 
 

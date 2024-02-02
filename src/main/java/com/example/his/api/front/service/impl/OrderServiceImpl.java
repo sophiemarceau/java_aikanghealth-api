@@ -237,7 +237,6 @@ public class OrderServiceImpl implements OrderService {
             return false;
         }
         String customerId = MapUtil.getStr(param, "customerId");
-        log.error("customerId====" + customerId);//customerId
         HashMap map = orderDao.searchRefundNeeded(param);
         String transactionId = MapUtil.getStr(map, "transactionId");
         String amount = MapUtil.getStr(map, "amount");
@@ -289,5 +288,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean closeOrderById(Map param) {
         return orderDao.closeOrderById(param) == 1;
+    }
+
+    @Override
+    public boolean hasOwnOrder(Map param) {
+        Integer id = orderDao.hasOwnOrder(param);
+        return id != null;
     }
 }

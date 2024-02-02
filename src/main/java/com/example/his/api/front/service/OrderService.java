@@ -23,4 +23,6 @@ public interface OrderService {
     public String payOrder(int customerId, String outTradeNo);
 
     public boolean closeOrderById(Map param);
+
+    public boolean hasOwnOrder(Map param);
 }
