@@ -1,7 +1,6 @@
 package com.example.his.api.mis.service.impl;
 
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.db.Page;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.db.dao.DeptDao;
 import com.example.his.api.db.pojo.DeptEntity;

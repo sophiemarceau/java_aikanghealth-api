@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

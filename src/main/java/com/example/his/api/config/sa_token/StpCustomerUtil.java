@@ -1,9 +1,5 @@
 package com.example.his.api.config.sa_token;
 
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.fun.SaFunction;
 import cn.dev33.satoken.listener.SaTokenEventCenter;
@@ -11,6 +7,9 @@ import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpLogic;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**

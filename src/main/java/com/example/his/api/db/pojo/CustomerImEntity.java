@@ -1,8 +1,8 @@
 package com.example.his.api.db.pojo;
 
-import java.io.Serializable;
-
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 客户IM帐户表

@@ -2,13 +2,12 @@ package com.example.his.api.config;
 
 import cn.dev33.satoken.exception.NotLoginException;
 import cn.felord.payment.PayException;
+import cn.hutool.json.JSONObject;
 import com.example.his.api.exception.HisException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindException;
-import cn.hutool.json.JSONObject;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

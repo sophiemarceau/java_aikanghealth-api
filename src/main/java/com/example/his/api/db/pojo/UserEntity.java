@@ -1,8 +1,9 @@
 package com.example.his.api.db.pojo;
 
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 用户表

@@ -1,10 +1,9 @@
 package com.example.his.api.mis.controller.form;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
-
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class SearchDeptByIdForm {

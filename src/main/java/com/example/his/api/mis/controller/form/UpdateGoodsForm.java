@@ -2,7 +2,6 @@ package com.example.his.api.mis.controller.form;
 
 import com.example.his.api.mis.controller.form.vo.CheckupVo;
 import lombok.Data;
-
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 

@@ -2,7 +2,6 @@ package com.example.his.api.db.dao;
 
 import com.example.his.api.db.pojo.RuleEntity;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;

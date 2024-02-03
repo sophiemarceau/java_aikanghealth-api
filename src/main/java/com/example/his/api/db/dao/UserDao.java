@@ -1,6 +1,5 @@
 package com.example.his.api.db.dao;
 
-import cn.hutool.core.lang.hash.Hash;
 import com.example.his.api.db.pojo.UserEntity;
 
 import java.util.ArrayList;
