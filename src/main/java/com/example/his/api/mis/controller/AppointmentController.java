@@ -2,12 +2,11 @@ package com.example.his.api.mis.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
 import cn.dev33.satoken.annotation.SaMode;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
-import com.example.his.api.mis.controller.form.DeleteAppointmentByIdsForm;
-import com.example.his.api.mis.controller.form.SearchAppointmentByOrderIdForm;
-import com.example.his.api.mis.controller.form.SearchAppointmentByPageForm;
+import com.example.his.api.mis.controller.form.*;
 import com.example.his.api.mis.service.AppointmentService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 @RestController("MisAppointmentController")
 @RequestMapping("/mis/appointment")
@@ -49,5 +49,28 @@ public class AppointmentController {
     public R deleteByIds(@RequestBody @Valid DeleteAppointmentByIdsForm form) {
         int rows = appointmentService.deleteByIds(form.getIds());
         return R.ok().put("rows", rows);
+    }
+
+    @PostMapping("/hasAppointInToday")
+    @SaCheckPermission(value = {"ROOT", "APPOINTMENT:UPDATE"}, mode = SaMode.OR)
+    public R hasAppointInToday(@RequestBody @Valid HasAppointInTodayForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        int result = appointmentService.hasAppointInToday(param);
+        return R.ok().put("result", result);
+    }
+
+    @PostMapping("/checkin")
+    @SaCheckPermission(value = {"ROOT", "APPOINTMENT:UPDATE"}, mode = SaMode.OR)
+    public R checkin(@RequestBody @Valid CheckinAppointmentForm form) {
+        Map param = BeanUtil.beanToMap(form);
+        boolean result = appointmentService.checkin(param);
+        return R.ok().put("result", result);
+    }
+
+    @PostMapping("/searchGuidanceInfo")
+    @SaCheckPermission(value = {"ROOT", "APPOINTMENT:SELECT"}, mode = SaMode.OR)
+    public R searchGuidanceInfo(@RequestBody @Valid SearchGuidanceInfoForm form) {
+        HashMap map = appointmentService.searchGuidanceInfo(form.getId());
+        return R.ok().put("result", map);
     }
 }

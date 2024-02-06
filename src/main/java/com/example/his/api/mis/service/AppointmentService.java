@@ -13,4 +13,9 @@ public interface AppointmentService {
 
     public int deleteByIds(Integer[] ids);
 
+    public int hasAppointInToday(Map param);
+
+    public boolean checkin(Map param);
+
+    public HashMap searchGuidanceInfo(int id);
 }

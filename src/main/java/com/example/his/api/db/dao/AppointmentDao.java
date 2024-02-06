@@ -26,6 +26,14 @@ public interface AppointmentDao {
     public long searchCount(Map param);
 
     public int deleteByIds(Integer[] ids);
+
+    public HashMap hasAppointInToday(Map param);
+
+    public int checkin(Map param);
+
+    public HashMap searchUuidAndSnapshotId(Map param);
+
+    public HashMap searchSummaryById(int id);
 }
 
 

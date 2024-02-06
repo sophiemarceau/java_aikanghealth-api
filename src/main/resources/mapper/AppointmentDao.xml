@@ -124,4 +124,55 @@
         </foreach>
         AND status = 1
     </delete>
+
+    <select id="hasAppointInToday" parameterType="Map" resultType="HashMap">
+        SELECT id, status
+        FROM tb_appointment
+        WHERE date = CURRENT_DATE ();
+        AND pid =
+        #{pid}
+        AND
+        name
+        =
+        #{name}
+        AND
+        sex
+        =
+        #{sex}
+        LIMIT
+        1
+    </select>
+
+    <update id="checkin" parameterType="Map">
+        UPDATE tb_appointment
+        SET `status`     = 2,
+            checkin_time = NOW()
+        WHERE date =CURRENT_DATE()
+        AND `status` = 1
+        AND pid = #{pid}
+    </update>
+
+    <select id="searchUuidAndSnapshotId" parameterType="Map" resultType="HashMap">
+        SELECT a.uuid,
+               o.snapshot_id AS snapshotId
+        FROM tb_appointment a
+                 JOIN tb_order o ON a.order_id = o.id
+        WHERE a.date = CURRENT_DATE()
+          AND a.pid = #{pid}
+    </select>
+    <select id="searchSummaryById" parameterType="int" resultType="HashMap">
+        SELECT a.uuid,
+               a.order_id                             AS orderId,
+               o.snapshot_id                          AS snapshotId,
+               a.name,
+               a.sex,
+               TIMESTAMPDIFF(YEAR, a.birthday, NOW()) AS age,
+               a.pid,
+               a.tel,
+               a.date,
+               a.company
+        FROM tb_appointment a
+                 JOIN tb_order o ON a.order_id = o.id
+        WHERE a.id = #{id}
+    </select>
 </mapper>

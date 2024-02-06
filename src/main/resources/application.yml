@@ -145,6 +145,13 @@ wechat:
         domain: http://s2.v100.vip:16661/his-api
         cert-path: apiclient_cert.p12
 tencent:
+  cloud:
+    appId: 1301675971
+    secretId: AKIDXt43ogPCwZ4RMRTJ3pUAkBgP0gFanyyj
+    secretKey: e8XnrqhQyUs8JI9DOYZP3UhhU3PYTANV
+    face:
+      groupId: his
+      region: ap-beijing
   im:
     sdkAppId: 1600022521
     secretKey: c26174a54af0bbdc632962821972e5509f949bee680383f515564ee732fa8c1c

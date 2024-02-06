@@ -1,5 +1,6 @@
 package com.example.his.api.common;
 
+import cn.hutool.core.codec.Base64;
 import com.example.his.api.exception.HisException;
 import io.minio.GetObjectArgs;
 import io.minio.MinioClient;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 @Component
@@ -92,6 +94,26 @@ public class MinioUtil {
             log.error("文件删除失败", e);
 
             throw new HisException("文件删除失败！");
+        }
+    }
+
+    public void uploadImage(String path, String base64Image) {
+        //去掉前缀
+        base64Image = base64Image.replace("data:image/jpeg;base64,", "");
+        base64Image = base64Image.replace("data:image/jpeg;base64,", "");
+        byte[] decode = Base64.decode(base64Image);
+        ByteArrayInputStream in = new ByteArrayInputStream(decode);
+        //在Minio中保存图片文件不能超过5M）
+        try {
+            this.client.putObject(PutObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(path)
+                    .stream(in, -1, 5 * 1024 * 1024)
+                    .contentType("image/jpeg")
+                    .build());
+        } catch (Exception e) {
+            log.error("保存文件失败", e);
+            throw new HisException("保存文件失败");
         }
     }
 }
