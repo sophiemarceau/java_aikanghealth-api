@@ -175,4 +175,26 @@
                  JOIN tb_order o ON a.order_id = o.id
         WHERE a.id = #{id}
     </select>
+
+    <update id="updateStatusByUuid" parameterType="Map">
+        UPDATE tb_appointment
+        SET status = #{status}
+        WHERE uuid = #{uuid}
+        AND status != 3
+    </update>
+
+    <select id="searchByUuid" parameterType="String" resultType="HashMap">
+        SELECT a.order_id AS orderId,
+               a.`name`,
+               a.sex,
+               TIMESTAMPDIFF(YEAR, a.birthday, NOW()) AS age,
+               a.tel,
+               a.uuid,
+               a.date,
+               a.`status`,
+               o.snapshot_id AS snapshotId
+        FROM tb_appointment a
+        JOIN tb_order o ON a.order_id = o.id
+        WHERE a.uuid = #{uuid}
+    </select>
 </mapper>

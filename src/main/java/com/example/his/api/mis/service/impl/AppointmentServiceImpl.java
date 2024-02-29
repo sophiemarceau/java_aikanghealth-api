@@ -8,9 +8,7 @@ import cn.hutool.extra.qrcode.QrConfig;
 import com.example.his.api.common.FaceAuthUtil;
 import com.example.his.api.common.MinioUtil;
 import com.example.his.api.common.PageUtils;
-import com.example.his.api.db.dao.AppointmentDao;
-import com.example.his.api.db.dao.CheckupResultDao;
-import com.example.his.api.db.dao.GoodsSnapshotDao;
+import com.example.his.api.db.dao.*;
 import com.example.his.api.exception.HisException;
 import com.example.his.api.mis.service.AppointmentService;
 import org.springframework.stereotype.Service;
@@ -31,6 +29,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     private FaceAuthUtil faceAuthUtil;
     @Resource
     private MinioUtil minioUtil;
+
+    @Resource
+    private OrderDao orderDao;
+
+    @Resource
+    private CheckupReportDao checkupReportDao;
 
     @Override
     public ArrayList<HashMap> searchByOrderId(int orderId) {
@@ -134,4 +138,54 @@ public class AppointmentServiceImpl implements AppointmentService {
         return map;
     }
 
+    @Override
+    @Transactional
+    public boolean updateStatusByUuid(Map param) {
+        int rows = appointmentDao.updateStatusByUuid(param);
+        if (rows != 1) {
+            return false;
+        }
+        int status = MapUtil.getInt(param, "status");
+        if (status == 3) {
+            //检查对应的订单是否所有的体检预约都已经结束
+            String uuid = MapUtil.getStr(param, "uuid");
+            HashMap map = orderDao.searchOrderIsFinished(uuid);
+            int orderId = MapUtil.getInt(map, "id");
+            int n1 = MapUtil.getInt(map, "n1");
+            int n2 = MapUtil.getInt(map, "n2");
+            if (n1 == n2) {
+                //更新订单为已结束 状态
+                rows = orderDao.updateStatus(new HashMap<>() {{
+                    put("status", 6);
+                    put("id", orderId);
+                }});
+                if (rows != 1) {
+                    return false;
+                }
+            }
+            //查询体检结果ID
+            String resultId = checkupResultDao.searchByUuid(uuid);
+            param.put("resultId", resultId);
+            rows = checkupReportDao.insert(param);
+            if (rows != 1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public HashMap searchByUuid(String uuid) {
+        HashMap map = appointmentDao.searchByUuid(uuid);
+        if (map == null) {
+            throw new HisException("不存在体检预约记录");
+        }
+        Integer status = MapUtil.getInt(map, "status");
+        if (status == 1) {
+            throw new HisException("该体检没有签到");
+        } else if(status ==3) {
+            throw new HisException("该体检预约已经结束");
+        }
+        return map;
+    }
 }

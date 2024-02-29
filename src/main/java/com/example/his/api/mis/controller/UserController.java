@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/searchByPage")
-    @SaCheckPermission(value = {"ROOT", "USER:SELECT" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER:SELECT"}, mode = SaMode.OR)
     public R searchByPage(@Valid @RequestBody SearchUserByPageForm form) {
         int page = form.getPage();
         int length = form.getLength();
@@ -88,7 +88,7 @@ public class UserController {
     }
 
     @PostMapping("/insert")
-    @SaCheckPermission(value = {"ROOT", "USER.INSERT" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER.INSERT"}, mode = SaMode.OR)
     public R insert(@Valid @RequestBody InsertUserForm form) {
         UserEntity user = BeanUtil.toBean(form, UserEntity.class);
         user.setStatus(1);
@@ -98,14 +98,14 @@ public class UserController {
     }
 
     @PostMapping("/searchById")
-    @SaCheckPermission(value = {"ROOT", "USER:SELECT" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER:SELECT"}, mode = SaMode.OR)
     public R searchById(@Valid @RequestBody SearchUserByIdForm form) {
         HashMap map = userService.searchById(form.getUserId());
         return R.ok().put("result", map);
     }
 
     @PostMapping("/update")
-    @SaCheckPermission(value = {"ROOT", "USER:UPDATE" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER:UPDATE"}, mode = SaMode.OR)
     public R update(@Valid @RequestBody UpdateUserForm form) {
         Map param = BeanUtil.beanToMap(form);
         param.replace("role", JSONUtil.parseArray(form.getRole()).toString());
@@ -118,7 +118,7 @@ public class UserController {
     }
 
     @PostMapping("/deleteByIds")
-    @SaCheckPermission(value = {"ROOT", "USER:DELETE" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER:DELETE"}, mode = SaMode.OR)
     public R deleteByIds(@Valid @RequestBody DeleteUserByIdsForm form) {
         Integer userId = StpUtil.getLoginIdAsInt();
         if (ArrayUtil.contains(form.getIds(), userId)) {
@@ -134,13 +134,21 @@ public class UserController {
     }
 
     @PostMapping("/dismiss")
-    @SaCheckPermission(value = {"ROOT", "USER:UPDATE" }, mode = SaMode.OR)
+    @SaCheckPermission(value = {"ROOT", "USER:UPDATE"}, mode = SaMode.OR)
     public R dismiss(@RequestBody @Valid DismissForm form) {
         int rows = userService.dismiss(form.getUserId());
         if (rows > 0) {
             StpUtil.logout(form.getUserId().intValue());
         }
         return R.ok().put("rows", rows);
+    }
+
+    @GetMapping("/searchDoctorById")
+    @SaCheckLogin
+    public R searchDoctorById() {
+        Integer userId = StpUtil.getLoginIdAsInt();
+        HashMap map = userService.searchDoctorById(userId);
+        return R.ok().put("result", map);
     }
 }
 

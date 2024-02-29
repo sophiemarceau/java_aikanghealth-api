@@ -259,4 +259,12 @@
         WHERE id = #{id}
           AND customer_id = #{customerId}
     </select>
+
+    <select id="searchOrderIsFinished" parameterType="String" resultType="HashMap">
+        SELECT o.id,
+               o.number AS n1,
+               (SELECT COUNT(*) FROM tb_appointment WHERE order_id AND status = 3) AS n2
+        FROM tb_order o JOIN tb_appointment a ON o.id = a.order_id
+        WHERE a.uuid = #{uuid}
+    </select>
 </mapper>

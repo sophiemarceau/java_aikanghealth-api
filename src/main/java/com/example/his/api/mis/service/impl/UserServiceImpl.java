@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         password = md5.digestHex(tempStart + password + temEnd).toUpperCase();
         param.replace("password", password);
 
-        String newPassword = MapUtil.getStr(param,"newPassword");
+        String newPassword = MapUtil.getStr(param, "newPassword");
         newPassword = md5.digestHex(tempStart + newPassword + temEnd).toUpperCase();
         param.replace("newPassword", newPassword);
 
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         MD5 md5 = MD5.create();
         String temp = md5.digestHex(user.getUsername());
         String tempStart = StrUtil.subWithLength(temp, 0, 6);
-        String tempEnd = StrUtil.subSuf(temp, temp.length() -3);
+        String tempEnd = StrUtil.subSuf(temp, temp.length() - 3);
         String password = md5.digestHex(tempStart + user.getPassword() + tempEnd).toUpperCase();
         user.setPassword(password);
         int rows = userDao.insert(user);
@@ -105,5 +105,11 @@ public class UserServiceImpl implements UserService {
     public int dismiss(int userId) {
         int rows = userDao.dismiss(userId);
         return rows;
+    }
+
+    @Override
+        public HashMap searchDoctorById(int userId) {
+        HashMap map = userDao.searchDoctorById(userId);
+        return map;
     }
 }

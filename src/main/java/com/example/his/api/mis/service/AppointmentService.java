@@ -18,4 +18,8 @@ public interface AppointmentService {
     public boolean checkin(Map param);
 
     public HashMap searchGuidanceInfo(int id);
+
+    public boolean updateStatusByUuid(Map param);
+
+    public HashMap searchByUuid(String uuid);
 }

@@ -34,6 +34,10 @@ public interface AppointmentDao {
     public HashMap searchUuidAndSnapshotId(Map param);
 
     public HashMap searchSummaryById(int id);
+
+    public int updateStatusByUuid(Map param);
+
+    public HashMap searchByUuid(String uuid);
 }
 
 

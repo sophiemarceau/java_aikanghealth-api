@@ -100,7 +100,7 @@ public class MinioUtil {
     public void uploadImage(String path, String base64Image) {
         //去掉前缀
         base64Image = base64Image.replace("data:image/jpeg;base64,", "");
-        base64Image = base64Image.replace("data:image/jpeg;base64,", "");
+        base64Image = base64Image.replace("data:image/png;base64,", "");
         byte[] decode = Base64.decode(base64Image);
         ByteArrayInputStream in = new ByteArrayInputStream(decode);
         //在Minio中保存图片文件不能超过5M）
@@ -111,6 +111,7 @@ public class MinioUtil {
                     .stream(in, -1, 5 * 1024 * 1024)
                     .contentType("image/jpeg")
                     .build());
+            log.debug("向" + path + "保存了文件");
         } catch (Exception e) {
             log.error("保存文件失败", e);
             throw new HisException("保存文件失败");

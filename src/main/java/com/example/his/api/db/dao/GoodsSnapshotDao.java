@@ -43,7 +43,8 @@ public class GoodsSnapshotDao {
                 Aggregation.project("checkup"),//规定节能过集体表
                 Aggregation.unwind("$checkup"),//展开JSON 的数组内容，为了筛选其中元素
                 Aggregation.match(
-                        Criteria.where("_id")//定位拍照记录
+                        Criteria.where("_id").is(id)//定位拍照记录
+                                //筛选适合当前体检人性别的检查项目
                                 .and("checkup.sex").in("无", sex)//筛选适合当前体检的人性别的检查项目
                 )
         );

@@ -54,6 +54,8 @@ public interface OrderDao {
     public int updateStatus(Map param);
 
     public Integer hasOwnOrder(Map param);
+
+    public HashMap searchOrderIsFinished(String uuid);
 }
 
 

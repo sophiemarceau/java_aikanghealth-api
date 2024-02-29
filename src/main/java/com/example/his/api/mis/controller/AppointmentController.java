@@ -8,6 +8,7 @@ import com.example.his.api.common.PageUtils;
 import com.example.his.api.common.R;
 import com.example.his.api.mis.controller.form.*;
 import com.example.his.api.mis.service.AppointmentService;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController("MisAppointmentController")
 @RequestMapping("/mis/appointment")
@@ -71,6 +73,21 @@ public class AppointmentController {
     @SaCheckPermission(value = {"ROOT", "APPOINTMENT:SELECT"}, mode = SaMode.OR)
     public R searchGuidanceInfo(@RequestBody @Valid SearchGuidanceInfoForm form) {
         HashMap map = appointmentService.searchGuidanceInfo(form.getId());
+        return R.ok().put("result", map);
+    }
+
+    @PostMapping("/updateStatusByUuid")
+    @SaCheckPermission(value = {"ROOT", "APPOINTMENT:UPDATE"}, mode = SaMode.OR)
+    public R updateStatusByUuid(@RequestBody @Valid UpdateAppointmentStatusByUuidForm form) {
+        Map<String, Object> param = BeanUtil.beanToMap(form);
+        boolean bool = appointmentService.updateStatusByUuid(param);
+        return R.ok().put("result", bool);
+    }
+
+    @PostMapping("/searchByUuid")
+    @SaCheckPermission(value = {"ROOT", "APPOINTMENT:SELECT"}, mode = SaMode.OR)
+    public R searchByUuid(@RequestBody @Valid SearchAppointmentByUuidForm form) {
+        HashMap map = appointmentService.searchByUuid(form.getUuid());
         return R.ok().put("result", map);
     }
 }

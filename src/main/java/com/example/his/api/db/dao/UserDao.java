@@ -36,6 +36,7 @@ public interface UserDao {
 
     public int dismiss(int userId);
 
+    public HashMap searchDoctorById(int userId);
 }
 
 
