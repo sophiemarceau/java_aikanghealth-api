@@ -5,4 +5,104 @@
 <mapper namespace="com.example.his.api.db.dao.FlowRegulationDao">
 
 
+    <select id="searchPlaceList" resultType="String">
+        SELECT place
+        FROM tb_flow_regulation
+    </select>
+    <select id="searchByPage" parameterType="Map" resultType="com.example.his.api.db.pojo.FlowRegulationEntity">
+        SELECT id,
+               place,
+        real_num AS realNum,
+        max_num AS maxNum,
+        weight,
+        priority,
+        blue_uuid AS blueUuid
+        FROM tb_flow_regulation
+        <where>
+            <if test="place!=null">
+                place = #{place}
+            </if>
+            <if test="blueUuid!=null">
+                AND blue_uuid = #{blueUuid}
+            </if>
+        </where>
+        LIMIT #{start}, #{length}
+    </select>
+    <select id="searchCount" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_flow_regulation
+        <where>
+            <if test="place!=null">
+                place = #{place}
+            </if>
+            <if test="blueUuid!=null">
+                AND blue_uuid = #{blueUuid}
+            </if>
+        </where>
+    </select>
+    <insert id="insert" parameterType="com.example.his.api.db.pojo.FlowRegulationEntity">
+        INSERT INTO tb_flow_regulation
+        SET place = #{place},
+            max_num = #{maxNum},
+            weight = #{weight},
+            priority = #{priority},
+            blue_uuid = #{blueUuid}
+    </insert>
+    <select id="searchById" parameterType="int" resultType="com.example.his.api.db.pojo.FlowRegulationEntity">
+        SELECT id,
+               place,
+               real_num AS realNum,
+               max_num AS maxNum,
+               weight,
+               priority,
+               blue_uuid AS blueUuid
+        FROM tb_flow_regulation
+        WHERE id = #{id}
+    </select>
+
+    <update id="update" parameterType="Map">
+        UPDATE tb_flow_regulation
+        SET place = #{place},
+            max_num = #{maxNum},
+            weight =#{weight},
+            priority = #{priority},
+            blue_uuid = #{blueUuid}
+        where id = #{id}
+    </update>
+    <update id="updateRealNum" parameterType="Map">
+        UPDATE tb_flow_regulation
+        SET real_num = #{realNum}
+        <if test="id!=null">
+            WHERE id = #{id}
+        </if>
+    </update>
+    <select id="searchRecommendWithWeight" resultType="java.util.HashMap">
+        SELECT r.id,
+               r.place,
+               r.real_num AS realNum,
+               r.weight,
+               ( r.weight / t.sum ) * (r.max_num - r.real_num) AS rank
+        FROM tb_flow_regulation r
+        JOIN (SELECT SUM( weight ) AS sum FROM tb_flow_regulation ) t
+        ORDER BY rank DESC
+    </select>
+    <select id="searchRecommendWithPriority" resultType="HashMap">
+        SELECT id,
+               place,
+               real_num AS realNum
+        FROM tb_flow_regulation
+        ORDER BY priority DESC, weight ASC
+    </select>
+    <select id="searchAllByPlace" resultType="HashMap">
+        SELECT id,
+               place
+        FROM tb_flow_regulation
+    </select>
+    <delete id="deleteByIds">
+        DELETE FROM tb_flow_regulation
+        WHERE id IN
+        <foreach collection="array" open="(" separator="," close=")" item="one">
+            #{one}
+        </foreach>
+     </delete>
 </mapper>
