@@ -99,4 +99,9 @@ public class CheckupResultDao {
         //更新数据
         mongoTemplate.save(entity);
     }
+
+    public CheckupResultEntity searchById(String id) {
+        CheckupResultEntity entity = mongoTemplate.findById(id, CheckupResultEntity.class);
+        return entity;
+    }
 }

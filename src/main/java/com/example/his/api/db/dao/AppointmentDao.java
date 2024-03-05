@@ -1,5 +1,6 @@
 package com.example.his.api.db.dao;
 
+import cn.hutool.core.lang.hash.Hash;
 import com.example.his.api.db.pojo.AppointmentEntity;
 
 import java.util.ArrayList;
@@ -38,6 +39,10 @@ public interface AppointmentDao {
     public int updateStatusByUuid(Map param);
 
     public HashMap searchByUuid(String uuid);
+
+    public HashMap searchDataForReport(int id);
+
+    public HashMap searchDataForWaybill(String uuid);
 }
 
 

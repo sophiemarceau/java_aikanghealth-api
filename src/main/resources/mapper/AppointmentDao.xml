@@ -197,4 +197,27 @@
         JOIN tb_order o ON a.order_id = o.id
         WHERE a.uuid = #{uuid}
     </select>
+
+    <select id="searchDataForReport" parameterType="int" resultType="HashMap" >
+        SELECT a.uuid,
+               a.`name`,
+               a.sex,
+               a.tel,
+               a.birthday,
+               TIMESTAMPDIFF(YEAR, a.birthday, NOW()) AS age,
+               IFNULL(a.company, '个人体检') AS company,
+               a.date,
+               o.goods_title AS goods
+        FROM tb_appointment a
+        JOIN tb_order o ON a.order_id = o.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="searchDataForWaybill" parameterType="String" resultType="HashMap">
+        SELECT id,
+               name,
+               tel
+        FROM tb_appointment
+        WHERE uuid = #{uuid}
+    </select>
 </mapper>

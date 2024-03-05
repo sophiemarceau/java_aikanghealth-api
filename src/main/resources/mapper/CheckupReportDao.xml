@@ -11,5 +11,101 @@
             date = CURRENT_DATE(),
             create_time = NOW()
     </insert>
+    <select id="searchByPage" parameterType="Map" resultType="HashMap">
+        SELECT r.id,
+               a.name,
+               a.sex,
+               TIMESTAMPDIFF(YEAR, a.birthday, NOW()) AS age,
+               CONCAT(SUBSTRING(a.pid, 1, 3), "***********", SUBSTRING(a.pid,15,4)) AS pid,
+               a.tel,
+               CONCAT(SUBSTRING(a.tel, 1, 3), "****",SUBSTRING(a.tel,8,4)) AS hideTel,
+               a.mailing_address AS mailingAddress,
+               a.date,
+               r.status,
+               r.file_path AS filePath,
+               r.waybill_code AS waybillCode,
+               r.waybill_date AS waybillDate
+        FROM tb_checkup_report r
+        JOIN tb_appointment a ON r.appointment_id = a.id
+        <where>
+            <if test="name!=null">
+                AND a.name LIKE CONCAT("%",#{name},"%")
+            </if>
+            <if test="tel!=null">
+                AND a.tel = #{tel}
+            </if>
+            <if test="waybillCode!=null">
+                AND r.waybill_code = #{waybillCode}
+            </if>
+            <if test="status!=null">
+                AND r.status = #{status}
+            </if>
+        </where>
+        ORDER BY r.id DESC
+        LIMIT #{start}, #{length}
+    </select>
 
+    <select id="searchCount" parameterType="Map" resultType="long">
+        SELECT COUNT(*)
+        FROM tb_checkup_report r
+        JOIN tb_appointment a ON r.appointment_id = a.id
+        <where>
+            <if test="name!=null">
+                AND a.name LIKE CONCAT("%",#{name},"%")
+            </if>
+            <if test="tel!=null">
+                AND a.tel = #{tel}
+            </if>
+            <if test="waybillCode!=null">
+                AND r.waybill_code = #{waybillCode}
+            </if>
+            <if test="status!=null">
+                AND r.status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="searchById" parameterType="int" resultType="HashMap">
+        SELECT appointment_id AS appointmentId,
+               result_id AS resultId,
+               status,
+               `date`
+        FROM tb_checkup_report
+        WHERE id =#{id}
+    </select>
+
+    <update id="update" parameterType="Map">
+        UPDATE tb_checkup_report
+        <set>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+            <if test="filePath!=null">
+                file_path=#{filePath},
+            </if>
+            <if test="waybillCode!=null">
+                waybill_code=#{waybillCode},
+            </if>
+            <if test="waybillDate!=null">
+                waybill_date = #{waybillDate},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <select id="searchWillGenerateReport" resultType="Integer">
+        SELECT id
+        FROM tb_checkup_report
+        WHERE status = 1
+          AND DATEDIFF(CURRENT_DATE, date) >= 10
+        LIMIT 50
+    </select>
+
+    <update id="updateWaybill" parameterType="Map">
+        UPDATE tb_checkup_report
+        SET waybill_code = #{waybillCode},
+            waybill_date = #{waybillDate},
+            status       = 3
+        WHERE appointment_id = #{appointmentId}
+    </update>
 </mapper>
