@@ -20,21 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketService {
     public static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
 
-    public static void sendInfo(String message, String userId) {
-        if (StrUtil.isNotBlank(userId) && sessionMap.containsKey(userId)) {
-            Session session = sessionMap.get(userId);
-            sendMessage(message, session);
-        }
-    }
-
-    private static void sendMessage(String message, Session session) {
-        try {
-            session.getBasicRemote().sendText(message);
-        } catch (Exception e) {
-            log.error("执行异常", e);
-        }
-    }
-
     @OnOpen
     public void onOpen(Session session) {
     }
@@ -81,5 +66,20 @@ public class WebSocketService {
     @OnError
     public void onError(Session session, Throwable error) {
         log.error("发生错误", error);
+    }
+
+    public static void sendInfo(String message, String userId) {
+        if (StrUtil.isNotBlank(userId) && sessionMap.containsKey(userId)) {
+            Session session = sessionMap.get(userId);
+            sendMessage(message, session);
+        }
+    }
+
+    private static void sendMessage(String message, Session session) {
+        try {
+            session.getBasicRemote().sendText(message);
+        } catch (Exception e) {
+            log.error("执行异常", e);
+        }
     }
 }

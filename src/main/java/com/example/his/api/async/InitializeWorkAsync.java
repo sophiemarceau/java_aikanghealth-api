@@ -12,7 +12,6 @@ import com.example.his.api.db.dao.FlowRegulationDao;
 import com.example.his.api.db.dao.SystemDao;
 import com.example.his.api.db.pojo.SystemEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
