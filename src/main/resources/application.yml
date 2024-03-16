@@ -31,7 +31,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:8066/his?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+      url: jdbc:mysql://152.136.137.85:8066/his?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
       username: root
       password: abc123456
       initial-size: 8
@@ -44,7 +44,7 @@ spring:
       validation-query: SELECT 1
   data:
     mongodb:
-      host: localhost
+      host: 152.136.137.85
       port: 27017
       database: his
       #admin是MongoDB用于验证用户身份的逻辑库
@@ -53,7 +53,7 @@ spring:
       password: abc123456
   redis:
     database: 0
-    host: localhost
+    host: 152.136.137.85
     port: 6379
     password: abc123456
     jedis:
@@ -70,7 +70,7 @@ spring:
       time-to-live: 2592000000
     type: redis
   rabbitmq:
-    host: localhost
+    host: 152.136.137.85
     port: 5672
     username: admin
     password: abc123456
@@ -112,7 +112,7 @@ sa-token:
   #SaToken缓存令牌用其他的逻辑库，避免业务数据和令牌数据共用相同的Redis逻辑库
   alone-redis:
     database: 1
-    host: localhost
+    host: 152.136.137.85
     port: 6379
     password: abc123456
     timeout: 10s
@@ -128,7 +128,7 @@ sa-token:
         min-idle: 8
 
 minio:
-  endpoint: http://localhost:9000
+  endpoint: http://152.136.137.85:9000
   access-key: root
   secret-key: abc123456
   bucket: his
