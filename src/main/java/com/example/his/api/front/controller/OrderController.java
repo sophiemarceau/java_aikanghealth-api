@@ -75,7 +75,7 @@ public class OrderController {
                 //查询订单的customId
                 Integer customerId = orderService.searchCustomerId(outTradeNo);
                 if (customerId == null) {
-                    log.error("没有查询到customerId");
+                    log.debug("没有查询到customerId");
                 } else {
                     //推送消息给前端页面
                     JSONObject json = new JSONObject();
@@ -147,7 +147,6 @@ public class OrderController {
                     log.error("订单状态更新失败");
                 } else {
                     log.debug("退款流水号为" + outRefundNo + "的订单退款成功");
-                    log.error("退款流水号为" + outRefundNo + "的订单退款成功");
                 }
             } else if ("ABNORMAL".equals(status)) {
                 //退款的银行开 不能用， 发送短信给用户手机，让用户联系客服执行手动退款到其他银行卡

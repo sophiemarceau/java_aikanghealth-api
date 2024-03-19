@@ -39,14 +39,18 @@ public class InitializeWorkAsync {
     @Async("AsyncTaskExecutor")
     @Transactional
     public void init() {
-        //加载全局设置
-        this.loadSystemSetting();
-        //生成未来60天的体检日程缓存
-        this.createAppointmentCache();
-        //缓存体检调流数据
-        this.creatFlowRegulationCache();
+        this.loadSystemSetting();//加载全局设置
+        this.createAppointmentCache();//生成未来60天的体检日程缓存
+        this.creatFlowRegulationCache();//缓存体检调流数据
     }
 
+    private void loadSystemSetting() {
+        ArrayList<SystemEntity> list = systemDao.searchAll();
+        list.forEach(one -> {
+            redisTemplate.opsForValue().set("setting#" + one.getItem(), one.getValue());
+        });
+        log.debug("系统设置缓存成功");
+    }
 
     private void createAppointmentCache() {
         DateTime startDate = DateUtil.tomorrow();
@@ -79,14 +83,6 @@ public class InitializeWorkAsync {
             redisTemplate.expireAt(key, dateTime);
         });
         log.debug("未来60day体检人数缓存设置成功！");
-    }
-
-    private void loadSystemSetting() {
-        ArrayList<SystemEntity> list = systemDao.searchAll();
-        list.forEach(one -> {
-            redisTemplate.opsForValue().set("setting#" + one.getItem(), one.getValue());
-        });
-        log.debug("系统设置缓存成功");
     }
 
     private void creatFlowRegulationCache() {

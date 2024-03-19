@@ -23,7 +23,7 @@ public class AppointmentSchedule {
         String date = new DateTime().offset(DateField.DAY_OF_MONTH, 62).toDateStr();
         String key = "appointment#" + date;
         redisTemplate.opsForHash().putAll(key, new HashMap() {{
-            put("manNum", maxNum);
+            put("maxNum", maxNum);
             put("realNum", realNum);
         }});
         DateTime dateTime = new DateTime(date).offsetNew(DateField.DAY_OF_MONTH, 1);
